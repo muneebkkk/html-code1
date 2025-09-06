@@ -1,0 +1,15 @@
+.container{
+    margin-top: 5%;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-bottom: 5%;
+    background-color: aliceblue;
+
+    
+}
+html {
+    background-color: gray;
+}
+.wrapper{
+    background-color: gray;
+}
