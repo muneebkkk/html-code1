@@ -1,15 +1,39 @@
-.container{
-    margin-top: 5%;
-    margin-left: 15%;
-    margin-right: 15%;
-    margin-bottom: 5%;
-    background-color: aliceblue;
+*{
+    box-sizing: border-box;
+}
 
+.container{
+    
+    background-color: white;
+    height: 100px;
+    width: auto;
+    display: flex;
+    align-items: center;
+    padding: 5%;
+    border: 1px solid black;
     
 }
+.container img{
+    height: 50px;
+    justify-content: flex-start;
+}
+
+
+.container ul{
+    display: inline-flex;
+    list-style: none;
+    gap: 10px;
+    float: right;
+}
+
+
 html {
     background-color: gray;
 }
 .wrapper{
-    background-color: gray;
+    
+    margin-top: 2%;
+    margin-left: 11%;
+    margin-right: 11%;
+    margin-bottom: 5%;  
 }
