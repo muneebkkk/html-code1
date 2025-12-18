@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout • Ad-agency</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <link rel="stylesheet" href="/LAB_1/styles.css" />
+</head>
+<body>
+  <div class="wrapper">
+    <header class="topbar">
+  <a class="brand" href="/LAB_1/index.html">
+    <img id="logo" src="/LAB_1/img_src/adagency.png" alt="Ad-agency logo"/>
+  </a>
+
+  <!-- Hamburger toggle (pure CSS) -->
+  <input type="checkbox" id="nav-toggle" />
+  <label for="nav-toggle" class="nav-toggle" aria-label="Toggle menu" aria-controls="menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </label>
+
+  <ul id="menu" class="menu">
+    <li><a href="/LAB_1/index.html">Home</a></li>
+    <li><a href="#">Who we are</a></li>
+    <li><a href="#">Projects</a></li>
+    <li><a href="#">Clients</a></li>
+    <li><a href="/LAB_1/RestAPI.html">API Demo</a></li>
+    <li><a href="/LAB_1/checkout.html">CheckOut</a></li>
+    <li>
+      <a href="#" aria-label="Search">
+        <i class="fa fa-search" aria-hidden="true"></i>
+        <span class="sr-only">Search</span>
+      </a>
+    </li>
+  </ul>
+</header>
+
+
+    <section id="success-page" class="page">
+      <div class="success-card">
+        <div class="success-badge">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <h1 style="letter-spacing:1px; font-weight:700; margin: 6px 0 6px;">Payment Successful!</h1>
+        <p class="muted" style="font-size:14px;">Thank you for your purchase.</p>
+
+        <div class="card" style="margin-top:16px;">
+          <p style="font-size:16px; margin:0;">
+            Your order number is:
+            <span id="order-number" style="font-weight:700; color:#5a5a5f;">ORD-123456</span>
+          </p>
+          <p class="muted" style="margin-top:8px;">
+            You will receive an email confirmation shortly with your order details.
+          </p>
+        </div>
+
+        <a href="/LAB_1/index.html" class="continue-btn">Continue Shopping</a>
+      </div>
+    </section>
+
+    <section id="checkout-page" class="page">
+      <div class="checkout-grid">
+        <div class="card">
+          <h1 style="margin:0 0 18px; letter-spacing:.5px;">Checkout</h1>
+
+          <h2 class="section-title">Shipping Information</h2>
+          <form id="checkout-form" class="checkout-inline">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" placeholder="John Doe" required>
+            </div>
+
+            <div class="form-group">
+              <label for="address">Address</label>
+              <input type="text" id="address" name="address" placeholder="123 Main St" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" placeholder="Anytown" required>
+              </div>
+              <div class="form-group">
+                <label for="zip">ZIP Code</label>
+                <input type="text" id="zip" name="zip" placeholder="12345" required>
+              </div>
+            </div>
+
+            <h2 class="section-title" style="margin-top:24px;">Payment Details</h2>
+            <div class="form-group">
+              <label for="card-number">Card Number</label>
+              <input type="text" id="card-number" name="card-number" placeholder="**** **** **** 1234" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="expiry-date">Expiry Date</label>
+                <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY" required>
+              </div>
+              <div class="form-group">
+                <label for="cvv">CVV</label>
+                <input type="text" id="cvv" name="cvv" placeholder="123" required>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <aside class="card">
+          <h2 class="section-title" style="margin-bottom:18px;">Order Summary</h2>
+
+          <div class="order-item">
+            <div class="order-left">
+              <div class="order-thumb">
+                <img src="https://placehold.co/64x64/e9ecef/495057?text=Item+1" alt="Modern Smartwatch">
+              </div>
+              <div>
+                <div style="font-weight:700;">Modern Smartwatch</div>
+                <div class="muted">Color: Midnight Black</div>
+              </div>
+            </div>
+            <div style="font-weight:700;">$299.00</div>
+          </div>
+
+          <div class="order-item">
+            <div class="order-left">
+              <div class="order-thumb">
+                <img src="https://placehold.co/64x64/e9ecef/495057?text=Item+2" alt="Wireless Earbuds">
+              </div>
+              <div>
+                <div style="font-weight:700;">Wireless Earbuds</div>
+                <div class="muted">Color: White</div>
+              </div>
+            </div>
+            <div style="font-weight:700;">$129.00</div>
+          </div>
+
+          <div class="order-totals">
+            <div class="rowline"><span>Subtotal</span><span>$428.00</span></div>
+            <div class="rowline"><span>Shipping</span><span>$15.00</span></div>
+            <div class="rowline total"><span>Total</span><span>$443.00</span></div>
+          </div>
+
+          <a href="#success-page" id="confirm-payment-btn" class="btn-primary" style="margin-top:16px;">
+            Confirm Payment
+          </a>
+        </aside>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // No custom validation: native HTML5 "required" will handle it.
+    // This only sets a friendly order number before navigating to #success-page.
+    (function(){
+      var btn = document.getElementById('confirm-payment-btn');
+      if(!btn) return;
+      btn.addEventListener('click', function(){
+        var span = document.getElementById('order-number');
+        if(span){
+          span.textContent = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+        }
+      }, false);
+    })();
+  </script>
+</body>
+</html>
