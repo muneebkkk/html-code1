@@ -1,11 +1,30 @@
 var express = require("express");
 var router = express.Router();
 var User = require("../models/User");
+var Product = require("../models/Product");
 const bcrypt = require("bcryptjs");
 
 /* GET home page */
 router.get("/", function (req, res, next) {
   return res.render("site/homepage", { layout: "layout" });
+});
+
+/* Public products listing page */
+router.get("/products", async function (req, res, next) {
+  try {
+    const products = await Product.find({});
+    return res.render("site/products", {
+      layout: "layout",
+      products,
+    });
+  } catch (err) {
+    console.error("Error fetching products for public listing:", err);
+    req.flash("danger", "Unable to load products at the moment.");
+    return res.render("site/products", {
+      layout: "layout",
+      products: [],
+    });
+  }
 });
 
 /* GET checkout page */
