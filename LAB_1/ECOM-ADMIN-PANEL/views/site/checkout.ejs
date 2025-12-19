@@ -1,0 +1,197 @@
+<!-- Success Page (displayed on #success-page anchor) -->
+<section id="success-page" class="page">
+  <div class="success-card">
+    <div class="success-badge">
+      <i class="fa-solid fa-check"></i>
+    </div>
+    <h1 style="letter-spacing:1px; font-weight:700; margin: 6px 0 6px;">Payment Successful!</h1>
+    <p class="muted" style="font-size:14px;">Thank you for your purchase.</p>
+
+    <div class="card" style="margin-top:16px;">
+      <p style="font-size:16px; margin:0;">
+        Your order number is:
+        <span id="order-number" style="font-weight:700; color:#5a5a5f;">ORD-123456</span>
+      </p>
+      <p class="muted" style="margin-top:8px;">
+        You will receive an email confirmation shortly with your order details.
+      </p>
+    </div>
+
+    <a href="/" class="continue-btn">Continue Shopping</a>
+  </div>
+</section>
+
+<!-- Checkout Page -->
+<section id="checkout-page" class="page">
+  <div class="checkout-grid">
+    <!-- Left: Shipping + Payment -->
+    <div class="card">
+      <h1 style="margin:0 0 18px; letter-spacing:.5px;">Checkout</h1>
+
+      <!-- Shipping -->
+      <h2 class="section-title">Shipping Information</h2>
+      <form id="checkout-form" class="checkout-inline">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" placeholder="John Doe" required>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input type="text" id="address" name="address" placeholder="123 Main St" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" placeholder="Anytown" required>
+          </div>
+          <div class="form-group">
+            <label for="zip">ZIP Code</label>
+            <input type="text" id="zip" name="zip" placeholder="12345" required>
+          </div>
+        </div>
+
+        <!-- Payment -->
+        <h2 class="section-title" style="margin-top:24px;">Payment Details</h2>
+        <div class="form-group">
+          <label for="card-number">Card Number</label>
+          <input type="text" id="card-number" name="card-number" placeholder="**** **** **** 1234" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="expiry-date">Expiry Date</label>
+            <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY" required>
+          </div>
+          <div class="form-group">
+            <label for="cvv">CVV</label>
+            <input type="text" id="cvv" name="cvv" placeholder="123" required>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right: Order Summary -->
+    <aside class="card">
+      <h2 class="section-title" style="margin-bottom:18px;">Order Summary</h2>
+
+      <div class="order-item">
+        <div class="order-left">
+          <div class="order-thumb">
+            <img src="https://placehold.co/64x64/e9ecef/495057?text=Item+1" alt="Modern Smartwatch">
+          </div>
+          <div>
+            <div style="font-weight:700;">Modern Smartwatch</div>
+            <div class="muted">Color: Midnight Black</div>
+          </div>
+        </div>
+        <div style="font-weight:700;">$299.00</div>
+      </div>
+
+      <div class="order-item">
+        <div class="order-left">
+          <div class="order-thumb">
+            <img src="https://placehold.co/64x64/e9ecef/495057?text=Item+2" alt="Wireless Earbuds">
+          </div>
+          <div>
+            <div style="font-weight:700;">Wireless Earbuds</div>
+            <div class="muted">Color: White</div>
+          </div>
+        </div>
+        <div style="font-weight:700;">$129.00</div>
+      </div>
+
+      <div class="order-totals">
+        <div class="rowline"><span>Subtotal</span><span>$428.00</span></div>
+        <div class="rowline"><span>Shipping</span><span>$15.00</span></div>
+        <div class="rowline total"><span>Total</span><span>$443.00</span></div>
+      </div>
+
+      <!-- Anchor targets success state; JS prevents navigation if invalid -->
+      <a href="#success-page" id="confirm-payment-btn" class="btn-primary" style="margin-top:16px;">
+        Confirm Payment
+      </a>
+    </aside>
+  </div>
+</section>
+
+<script>
+  // Validation + success number
+  function validateForm(e){
+    var ok = true;
+    var fields = [
+      "name","address","city","zip",
+      "card-number","expiry-date","cvv"
+    ].map(function(id){ return document.getElementById(id); });
+
+    fields.forEach(function(el){
+      if(!el.value){
+        ok = false;
+        el.style.border = "2px solid red";
+      } else {
+        el.style.border = "";
+      }
+    });
+
+    if(!ok){
+      e.preventDefault();
+      alert("Please fill in all required fields.");
+      return false;
+    }
+
+    var order = "ORD-" + Math.floor(100000 + Math.random()*900000);
+    var span = document.getElementById("order-number");
+    if(span){ span.textContent = order; }
+
+    return true; // allow navigation to #success-page
+  }
+
+  function binding(){
+    var confirmBtn = document.getElementById("confirm-payment-btn");
+    if(confirmBtn){
+      confirmBtn.addEventListener("click", validateForm, false);
+    }
+  }
+  window.onload = binding;
+</script>
+
+<style>
+  /* Checkout-specific styles */
+  .page { display: none; padding: 40px 20px; }
+  #checkout-page { display: block; }
+  #success-page:target { display: block; }
+  #success-page:target ~ #checkout-page { display: none; }
+  
+  .success-card { max-width: 500px; margin: 0 auto; text-align: center; padding: 40px; background: #f9f9f9; border-radius: 8px; }
+  .success-badge { width: 80px; height: 80px; background: #4caf50; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #fff; font-size: 40px; }
+  .muted { color: #888; }
+  .continue-btn { display: inline-block; margin-top: 20px; background: #333; color: #fff; padding: 12px 30px; text-decoration: none; border-radius: 4px; }
+  
+  .checkout-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 30px; max-width: 1200px; margin: 0 auto; }
+  @media (max-width: 900px) { .checkout-grid { grid-template-columns: 1fr; } }
+  
+  .card { background: #fff; padding: 30px; border: 1px solid #e3e3e3; border-radius: 8px; }
+  .section-title { font-size: 18px; font-weight: 600; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e3e3e3; }
+  
+  .checkout-inline .form-group { margin-bottom: 15px; }
+  .checkout-inline label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; }
+  .checkout-inline input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  
+  .order-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; }
+  .order-left { display: flex; gap: 15px; align-items: center; }
+  .order-thumb { width: 64px; height: 64px; border-radius: 4px; overflow: hidden; }
+  .order-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  
+  .order-totals { margin-top: 20px; padding-top: 20px; border-top: 2px solid #e3e3e3; }
+  .rowline { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+  .rowline.total { font-size: 18px; font-weight: 700; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd; }
+  
+  .btn-primary { display: block; width: 100%; text-align: center; background: #333; color: #fff; padding: 15px; text-decoration: none; border-radius: 4px; font-weight: 600; border: 0; cursor: pointer; }
+  .btn-primary:hover { background: #555; }
+</style>
+
+
+
+

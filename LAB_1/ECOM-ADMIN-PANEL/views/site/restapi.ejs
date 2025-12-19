@@ -1,0 +1,115 @@
+<style>
+  .page { margin-top: 4%; margin-left: 8%; margin-right: 8%; margin-bottom: 8%; }
+  .post-card.card { transition: transform .2s ease, box-shadow .2s ease; }
+  .post-card.card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.10); }
+  #loadingArea { display: none; align-items: center; gap: 10px; color: #666; }
+  .action-btn { cursor: pointer; }
+  .post-body { max-height: 72px; overflow: hidden; }
+</style>
+
+<section class="page">
+  <div id="alertArea" class="mb-3"></div>
+  <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+    <h1 class="h3 m-0">JSONPlaceholder Posts (CRUD)</h1>
+    <div id="loadingArea" class="d-inline-flex">
+      <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+      <span>Loading…</span>
+    </div>
+  </div>
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="h5 mb-3">Add / Update Post</h2>
+      <form id="postForm" class="row g-3">
+        <input type="hidden" id="postId">
+        <div class="col-md-6">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" id="title" class="form-control" placeholder="Post title" required>
+        </div>
+        <div class="col-md-6">
+          <label for="userId" class="form-label">User ID</label>
+          <input type="number" id="userId" class="form-control" placeholder="e.g., 1" min="1" required>
+        </div>
+        <div class="col-12">
+          <label for="body" class="form-label">Body</label>
+          <textarea id="body" class="form-control" rows="3" placeholder="Write something…" required></textarea>
+        </div>
+        <div class="col-12 d-flex gap-2">
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk me-1"></i> Save</button>
+          <button type="button" id="resetBtn" class="btn btn-outline-secondary"><i class="fa-solid fa-eraser me-1"></i> Reset</button>
+          <button type="button" id="reloadBtn" class="btn btn-outline-dark"><i class="fa-solid fa-rotate me-1"></i> Reload</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id="postsGrid" class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3"></div>
+</section>
+
+<script>
+  const API = { list: "https://jsonplaceholder.typicode.com/posts?_limit=12", base: "https://jsonplaceholder.typicode.com/posts" };
+  const $alertArea = $("#alertArea"), $loading = $("#loadingArea"), $grid = $("#postsGrid"), $form = $("#postForm");
+  const $reset = $("#resetBtn"), $reload = $("#reloadBtn");
+  const $postId = $("#postId"), $title = $("#title"), $userId = $("#userId"), $body = $("#body");
+  function showLoading(show) { if (show) $loading.show(); else $loading.hide(); }
+  function showAlert(type = "success", msg = "") {
+    const id = "alert-" + Date.now();
+    const html = `<div id="${id}" class="alert alert-${type} alert-dismissible fade show" role="alert">${msg}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
+    $alertArea.append(html);
+    setTimeout(() => { $("#" + id).alert('close'); }, 3000);
+  }
+  function cardTemplate(p) {
+    const title = escapeHtml(p.title || ""), body = escapeHtml(p.body || ""), uid = Number(p.userId || 0);
+    return `<div class="col"><div class="card post-card h-100 border-0 shadow-sm"><div class="card-body d-flex flex-column"><div class="d-flex align-items-center justify-content-between mb-2"><h5 class="card-title mb-0">${title}</h5><span class="badge bg-secondary">#${p.id ?? "—"}</span></div><div class="text-muted small mb-2">User ID: <strong>${uid || "-"}</strong></div><p class="card-text post-body">${body}</p><div class="mt-auto d-flex gap-2 pt-2"><button class="btn btn-sm btn-outline-primary action-btn" data-action="edit" data-id="${p.id}"><i class="fa-solid fa-pen me-1"></i> Edit</button><button class="btn btn-sm btn-outline-danger action-btn" data-action="delete" data-id="${p.id}"><i class="fa-solid fa-trash me-1"></i> Delete</button></div></div></div></div>`;
+  }
+  function escapeHtml(str) { return String(str ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
+  function fillForm(post){ $postId.val(post.id || ""); $title.val(post.title || ""); $userId.val(post.userId || ""); $body.val(post.body || ""); window.scrollTo({ top: 0, behavior: "smooth" }); }
+  function resetForm(){ $form[0].reset(); $postId.val(""); }
+  function loadPosts(){
+    showLoading(true);
+    $.get(API.list)
+      .done(function(posts){ $grid.empty(); posts.forEach(p => $grid.append(cardTemplate(p))); showAlert("success", "Loaded posts."); })
+      .fail(function(){ showAlert("danger", "Failed to load posts."); })
+      .always(function(){ showLoading(false); });
+  }
+  $form.on("submit", function(e){
+    e.preventDefault();
+    const id = $postId.val().trim();
+    const payload = { title: $title.val().trim(), body: $body.val().trim(), userId: Number($userId.val()) };
+    if(!payload.title || !payload.body || !payload.userId){ showAlert("warning", "Please fill all fields."); return; }
+    showLoading(true);
+    if(id){
+      $.ajax({ url: API.base + "/" + id, method: "PUT", data: JSON.stringify(payload), contentType: "application/json; charset=UTF-8" })
+        .done(function(updated){ const $card = $grid.find(`[data-id="${id}"]`).closest(".col"); if($card.length){ $card.replaceWith(cardTemplate({ ...updated, id })); } else { loadPosts(); } showAlert("success", "Post updated."); resetForm(); })
+        .fail(function(){ showAlert("danger", "Failed to update post."); })
+        .always(function(){ showLoading(false); });
+    } else {
+      $.ajax({ url: API.base, method: "POST", data: JSON.stringify(payload), contentType: "application/json; charset=UTF-8" })
+        .done(function(created){ $grid.prepend(cardTemplate(created)); showAlert("success", "Post created."); resetForm(); })
+        .fail(function(){ showAlert("danger", "Failed to create post."); })
+        .always(function(){ showLoading(false); });
+    }
+  });
+  $grid.on("click", ".action-btn", function(){
+    const action = $(this).data("action"), id = $(this).data("id");
+    if(action === "edit"){
+      showLoading(true);
+      $.get(API.base + "/" + id)
+        .done(function(post){ fillForm(post); showAlert("info", "Editing post #" + id); })
+        .fail(function(){ showAlert("danger", "Failed to fetch post."); })
+        .always(function(){ showLoading(false); });
+    } else if(action === "delete"){
+      if(!confirm("Delete post #" + id + " ?")) return;
+      showLoading(true);
+      $.ajax({ url: API.base + "/" + id, method: "DELETE" })
+        .done(function(){ const $col = $grid.find(`[data-id="${id}"]`).closest(".col"); $col.remove(); showAlert("success", "Post deleted."); })
+        .fail(function(){ showAlert("danger", "Failed to delete post."); })
+        .always(function(){ showLoading(false); });
+    }
+  });
+  $reset.on("click", function(){ resetForm(); showAlert("secondary", "Form reset."); });
+  $reload.on("click", function(){ loadPosts(); });
+  $(document).ready(loadPosts);
+</script>
+
+
+
+
