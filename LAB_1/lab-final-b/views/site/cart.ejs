@@ -1,0 +1,108 @@
+<section class="page" style="padding: 40px 4% 100px 4%;">
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <h2 class="h4 mb-1">Your Cart</h2>
+      <p class="text-muted mb-0">Review the items before proceeding to checkout.</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+      <a href="/products" class="btn btn-outline-primary">Continue Shopping</a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <% if (cart && cart.length) { %>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th style="width: 100px;">Price</th>
+                    <th style="width: 80px;">Qty</th>
+                    <th style="width: 120px;" class="text-end">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% cart.forEach(function(item) { %>
+                    <tr>
+                      <td><%= item.name %></td>
+                      <td>$<%= Number(item.price).toFixed(2) %></td>
+                      <td><%= item.quantity %></td>
+                      <td class="text-end">
+                        $<%= (Number(item.price) * Number(item.quantity)).toFixed(2) %>
+                      </td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          <% } else { %>
+            <p class="text-muted mb-0">Your cart is empty.</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 mt-3 mt-md-0">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Summary</h5>
+          <div class="d-flex justify-content-between mb-3">
+            <span>Subtotal</span>
+            <strong>$<%= subtotal.toFixed(2) %></strong>
+          </div>
+          <% if (cart && cart.length) { %>
+            <a href="/order/preview" class="btn btn-success w-100">Proceed to Order Preview</a>
+          <% } else { %>
+            <button class="btn btn-success w-100" disabled>Proceed to Order Preview</button>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sticky Order Preview Button (for non-logged-in users) -->
+<% if ((typeof user === 'undefined' || !user) && cart && cart.length > 0) { %>
+  <div class="sticky-order-preview">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <div class="d-flex align-items-center">
+            <span class="me-3 fw-bold">Total: $<%= subtotal.toFixed(2) %></span>
+            <span class="text-muted"><%= cart.length %> item(s)</span>
+          </div>
+        </div>
+        <div class="col-md-6 text-md-end mt-2 mt-md-0">
+          <a href="/order/preview" class="btn btn-success btn-lg w-100 w-md-auto">
+            <i class="fas fa-shopping-cart me-2"></i>Order Preview
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<style>
+  .sticky-order-preview {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 2px solid #e3e3e3;
+    padding: 15px 20px;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  @media (max-width: 768px) {
+    .sticky-order-preview {
+      padding: 12px 15px;
+    }
+  }
+</style>
+
+

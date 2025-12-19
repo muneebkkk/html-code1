@@ -1,0 +1,35 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card shadow">
+        <div class="card-body">
+          <h2 class="card-title mb-4">My Account</h2>
+          
+          <% if (typeof flash !== 'undefined' && flash) { %>
+            <div class="alert alert-<%= flash.type %> alert-dismissible fade show" role="alert">
+              <%= flash.message %>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          <% } %>
+
+          <div class="mb-4">
+            <h4>Welcome, <%= typeof user !== 'undefined' && user ? user.name : 'Guest' %>!</h4>
+            <p class="text-muted">Email: <%= typeof user !== 'undefined' && user ? user.email : 'N/A' %></p>
+            <% if (typeof user !== 'undefined' && user && user.roles && user.roles.includes('admin')) { %>
+              <span class="badge bg-danger">Admin</span>
+              <a href="/super-admin" class="btn btn-sm btn-primary ms-2">Go to Admin Panel</a>
+            <% } else { %>
+              <span class="badge bg-info">Customer</span>
+            <% } %>
+          </div>
+
+          <div class="mt-4">
+            <a href="/logout" class="btn btn-danger">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

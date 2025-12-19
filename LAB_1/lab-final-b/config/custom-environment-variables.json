@@ -1,0 +1,7 @@
+{
+  "jwtPrivateKey": "jwtPrivateKey",
+  "db": "db",
+  "sessionSecret": "sessionSecret"
+}
+
+

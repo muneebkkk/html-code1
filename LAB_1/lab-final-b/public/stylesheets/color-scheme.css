@@ -1,0 +1,229 @@
+/* ============================================
+   CONSISTENT COLOR SCHEME ACROSS WEBSITE
+   ============================================ */
+
+:root {
+  /* Primary Colors - Purple Gradient */
+  --primary-color: #667eea;
+  --primary-dark: #764ba2;
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  
+  /* Success Colors - Green */
+  --success-color: #28a745;
+  --success-dark: #218838;
+  --success-light: #4caf50;
+  
+  /* Warning Colors - Orange/Yellow */
+  --warning-color: #ffc107;
+  --warning-dark: #e0a800;
+  
+  /* Info Colors - Blue */
+  --info-color: #17a2b8;
+  --info-dark: #138496;
+  
+  /* Danger Colors - Red */
+  --danger-color: #dc3545;
+  --danger-dark: #c82333;
+  
+  /* Neutral Colors */
+  --dark-color: #333;
+  --dark-light: #5a5a5f;
+  --gray-color: #6c757d;
+  --gray-light: #e3e3e3;
+  --gray-lighter: #f5f5f5;
+  --white: #fff;
+  
+  /* Background Gradients */
+  --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --bg-gradient-dark: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* ============================================
+   BUTTONS - Consistent Styling
+   ============================================ */
+.btn-primary,
+.btn-primary-beautiful {
+  background: var(--primary-gradient) !important;
+  border: none !important;
+  color: var(--white) !important;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover,
+.btn-primary-beautiful:hover {
+  background: linear-gradient(135deg, #5568d3 0%, #653d8f 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  color: var(--white) !important;
+}
+
+.btn-success,
+.btn-success-beautiful {
+  background: var(--success-color) !important;
+  border: none !important;
+  color: var(--white) !important;
+}
+
+.btn-success:hover,
+.btn-success-beautiful:hover {
+  background: var(--success-dark) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+  color: var(--white) !important;
+}
+
+.btn-warning {
+  background: var(--warning-color) !important;
+  border: none !important;
+  color: var(--dark-color) !important;
+}
+
+.btn-info {
+  background: var(--info-color) !important;
+  border: none !important;
+  color: var(--white) !important;
+}
+
+.btn-danger {
+  background: var(--danger-color) !important;
+  border: none !important;
+  color: var(--white) !important;
+}
+
+/* ============================================
+   BADGES - Consistent Styling
+   ============================================ */
+.badge.bg-primary,
+.badge-primary-beautiful {
+  background: var(--primary-gradient) !important;
+  color: var(--white) !important;
+}
+
+.badge.bg-success,
+.badge-success-beautiful {
+  background: var(--success-color) !important;
+  color: var(--white) !important;
+}
+
+.badge.bg-warning {
+  background: var(--warning-color) !important;
+  color: var(--dark-color) !important;
+}
+
+.badge.bg-info {
+  background: var(--info-color) !important;
+  color: var(--white) !important;
+}
+
+.badge.bg-danger {
+  background: var(--danger-color) !important;
+  color: var(--white) !important;
+}
+
+.badge.bg-secondary {
+  background: var(--gray-color) !important;
+  color: var(--white) !important;
+}
+
+/* ============================================
+   CARDS - Consistent Styling
+   ============================================ */
+.card.bg-primary {
+  background: var(--primary-gradient) !important;
+  color: var(--white) !important;
+}
+
+.card.bg-success {
+  background: var(--success-color) !important;
+  color: var(--white) !important;
+}
+
+.card.bg-warning {
+  background: var(--warning-color) !important;
+  color: var(--dark-color) !important;
+}
+
+.card.bg-info {
+  background: var(--info-color) !important;
+  color: var(--white) !important;
+}
+
+/* ============================================
+   ALERTS - Consistent Styling
+   ============================================ */
+.alert-success {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  border-color: var(--success-color);
+  color: #155724;
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+  border-color: var(--danger-color);
+  color: #721c24;
+}
+
+.alert-info {
+  background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+  border-color: var(--info-color);
+  color: #0c5460;
+}
+
+.alert-warning {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border-color: var(--warning-color);
+  color: #856404;
+}
+
+/* ============================================
+   NAVBAR ORDER PREVIEW BUTTON
+   ============================================ */
+.menu li a.order-preview-nav {
+  background: var(--success-color) !important;
+  color: var(--white) !important;
+}
+
+.menu li a.order-preview-nav:hover {
+  background: var(--success-dark) !important;
+}
+
+/* ============================================
+   FORM CONTROLS - Consistent Focus
+   ============================================ */
+.form-control:focus,
+.form-control-beautiful:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
+}
+
+/* ============================================
+   BACKGROUND GRADIENTS
+   ============================================ */
+.bg-gradient-primary {
+  background: var(--primary-gradient) !important;
+}
+
+.bg-gradient-page {
+  background: var(--bg-gradient) !important;
+}
+
+/* ============================================
+   TEXT COLORS
+   ============================================ */
+.text-primary-custom {
+  color: var(--primary-color) !important;
+}
+
+.text-success-custom {
+  color: var(--success-color) !important;
+}
+
+/* ============================================
+   SUCCESS BADGES/ICONS
+   ============================================ */
+.success-badge,
+.success-icon {
+  background: var(--success-light) !important;
+  color: var(--white) !important;
+}
+

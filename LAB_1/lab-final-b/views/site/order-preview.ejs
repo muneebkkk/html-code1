@@ -1,0 +1,200 @@
+<section class="page" style="padding: 40px 4%;">
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <h2 class="h4 mb-1">Order Preview</h2>
+      <p class="text-muted mb-0">Review your items before placing the order.</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+      <a href="/cart" class="btn btn-outline-secondary me-2">Go Back to Cart</a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8 mb-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Cart Items</h5>
+          <% if (cart && cart.length) { %>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th style="width: 100px;">Price</th>
+                    <th style="width: 150px;">Quantity</th>
+                    <th style="width: 120px;" class="text-end">Total</th>
+                    <th style="width: 80px;" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% cart.forEach(function(item, index) { %>
+                    <tr>
+                      <td><%= item.name %></td>
+                      <td>$<%= Number(item.price).toFixed(2) %></td>
+                      <td>
+                        <form action="/cart/update/<%= item.productId %>" method="POST" class="d-inline-flex align-items-center" style="gap: 5px;">
+                          <input type="hidden" name="coupon" value="<%= pricing.couponCode || '' %>">
+                          <input type="hidden" name="email" id="hidden-email-<%= index %>" value="<%= typeof emailValue !== 'undefined' ? emailValue : (user && user.email ? user.email : '') %>">
+                          <button type="submit" name="action" value="decrease" class="btn btn-sm btn-outline-secondary" style="width: 30px; height: 30px; padding: 0;">
+                            <i class="fas fa-minus"></i>
+                          </button>
+                          <span class="mx-2 fw-bold" style="min-width: 30px; text-align: center;"><%= item.quantity %></span>
+                          <button type="submit" name="action" value="increase" class="btn btn-sm btn-outline-secondary" style="width: 30px; height: 30px; padding: 0;">
+                            <i class="fas fa-plus"></i>
+                          </button>
+                        </form>
+                      </td>
+                      <td class="text-end">
+                        $<%= (Number(item.price) * Number(item.quantity)).toFixed(2) %>
+                      </td>
+                      <td class="text-center">
+                        <form action="/cart/update/<%= item.productId %>" method="POST" class="d-inline">
+                          <input type="hidden" name="coupon" value="<%= pricing.couponCode || '' %>">
+                          <input type="hidden" name="email" id="hidden-email-remove-<%= index %>" value="<%= typeof emailValue !== 'undefined' ? emailValue : (user && user.email ? user.email : '') %>">
+                          <button type="submit" name="action" value="remove" class="btn btn-sm btn-danger" onclick="return confirm('Remove <%= item.name %> from cart?')">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          <% } else { %>
+            <p class="text-muted mb-0">Your cart is empty.</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <form action="/order/confirm" method="POST">
+        <div class="card shadow-sm mb-3">
+          <div class="card-body">
+            <h5 class="card-title mb-3">Order Summary</h5>
+            <div class="mb-2 d-flex justify-content-between">
+              <span>Original Subtotal:</span>
+              <span>$<%= pricing.subtotal.toFixed(2) %></span>
+            </div>
+            <div class="mb-2 d-flex justify-content-between">
+              <span>Discount:</span>
+              <span>
+                <% if (pricing.discountAmount > 0) { %>
+                  -$<%= pricing.discountAmount.toFixed(2) %>
+                <% } else { %>
+                  $0.00
+                <% } %>
+              </span>
+            </div>
+            <hr />
+            <div class="mb-3 d-flex justify-content-between fw-bold">
+              <span>Grand Total:</span>
+              <span>$<%= pricing.finalTotal.toFixed(2) %></span>
+            </div>
+
+            <div class="mb-3">
+              <label for="coupon" class="form-label">Coupon Code</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="coupon"
+                  name="coupon"
+                  value="<%= pricing.couponCode || '' %>"
+                  placeholder="Enter coupon code (e.g., SAVE10)"
+                  style="font-size: 14px;"
+                />
+                <button type="button" class="btn btn-outline-primary" id="applyCouponBtn" onclick="applyCoupon()">
+                  Apply
+                </button>
+              </div>
+              <div style="font-size: 14px; color: #6c757d; margin-top: 5px;">Use <strong>SAVE10</strong> to get 10% off.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                value="<%= typeof emailValue !== 'undefined' ? emailValue : (user && user.email ? user.email : '') %>"
+                placeholder="you@email.com"
+                required
+              />
+              <div class="form-text">We'll use this to look up your orders later.</div>
+            </div>
+
+            <button type="button" class="btn btn-success w-100" onclick="goToCheckout()">Confirm Order</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  function applyCoupon() {
+    const coupon = document.getElementById('coupon').value;
+    const email = document.getElementById('email').value;
+    
+    // Build URL with coupon and preserve email
+    let url = '/order/preview';
+    const params = new URLSearchParams();
+    if (coupon) {
+      params.append('coupon', coupon);
+    }
+    if (email) {
+      params.append('email', email);
+    }
+    
+    if (params.toString()) {
+      url += '?' + params.toString();
+    }
+    
+    window.location.href = url;
+  }
+  
+  function goToCheckout() {
+    const coupon = document.getElementById('coupon').value;
+    const email = document.getElementById('email').value;
+    
+    // Validate email
+    if (!email) {
+      alert('Please enter your email address');
+      document.getElementById('email').focus();
+      return;
+    }
+    
+    // Build URL with coupon and email to pass to checkout
+    let url = '/checkout';
+    const params = new URLSearchParams();
+    if (coupon) {
+      params.append('coupon', coupon);
+    }
+    if (email) {
+      params.append('email', email);
+    }
+    
+    if (params.toString()) {
+      url += '?' + params.toString();
+    }
+    
+    window.location.href = url;
+  }
+  
+  // Update hidden email fields when email input changes
+  document.addEventListener('DOMContentLoaded', function() {
+    const emailInput = document.getElementById('email');
+    if (emailInput) {
+      emailInput.addEventListener('input', function() {
+        const emailValue = this.value;
+        // Update all hidden email fields in cart update forms
+        document.querySelectorAll('input[type="hidden"][name="email"]').forEach(function(hidden) {
+          hidden.value = emailValue;
+        });
+      });
+    }
+  });
+</script>
